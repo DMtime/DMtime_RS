@@ -32,8 +32,7 @@ def __Preprocessing(title: list) -> list:
 
 def Recomendation(post_id: int) -> list:
     # find post_id and title more than a week
-    query = 'select post.post_id, post.title from post;'
-    # query = 'select post.post_id, post.title from post where post.posted_datetime > (now() - interval 1 week);'
+    query = 'select post.post_id, post.title from post where post.posted_datetime > (now() - interval 1 week);'
 
     # make dataframe for post_id and title
     dataframe = pd.DataFrame(engine.execute(query).fetchall(), columns=['postId', 'title'])
@@ -48,8 +47,7 @@ def Recomendation(post_id: int) -> list:
     # TF-IDF
     tfidf = TfidfVectorizer()
     tfidf.fit(processing_data)
-    tfidf_dataframe = pd.DataFrame(tfidf.transform(processing_data).toarray(), columns=sorted(tfidf.vocabulary_),
-                                   index=dataframe['postId'])
+    tfidf_dataframe = pd.DataFrame(tfidf.transform(processing_data).toarray(), columns=sorted(tfidf.vocabulary_), index=dataframe['postId'])
 
     # calculate cosine similarity
     cosine_sim = cosine_similarity(tfidf_dataframe, tfidf_dataframe)
